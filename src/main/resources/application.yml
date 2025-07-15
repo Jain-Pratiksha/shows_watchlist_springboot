@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: shows_watchlist
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/ShowWatchList
+      auto-index-creation: true # Enable auto-index creation for MongoDB at springboot app startup even after collection already exists
+
+server:
+  port: 8080
+
+##logging configuration
+#logging:
+#  level:
+#    root: INFO
+#    com:
+#      shows_watchlist: DEBUG # Enable debug logging for the shows_watchlist package
+#
+#  file:
+#    name: logs/shows_watchlist.log # Log file location
+#    max-size: 10MB # Maximum size of the log file
+#    max-history: 30 # Keep logs for 30 days
+
