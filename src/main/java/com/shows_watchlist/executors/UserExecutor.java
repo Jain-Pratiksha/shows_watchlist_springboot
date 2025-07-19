@@ -7,7 +7,6 @@ import com.shows_watchlist.utils.*;
 import org.slf4j.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.http.*;
-import org.springframework.security.crypto.password.*;
 import org.springframework.stereotype.*;
 
 @Component
@@ -15,12 +14,6 @@ public class UserExecutor {
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private JwtUtil jwtUtil;
 
     private static final Logger logger = LoggerFactory.getLogger(UserExecutor.class);
     /**
@@ -34,7 +27,7 @@ public class UserExecutor {
         try {
             User user = new User();
             user.setEmailId(userSignUpDTO.getEmailId());
-            user.setPassword(passwordEncoder.encode(userSignUpDTO.getPassword()));
+            user.setPassword(userSignUpDTO.getPassword());
             user.setRole(userSignUpDTO.getRole() != null ? userSignUpDTO.getRole() : Enums.Role.USER); // Default to USER if role is not provided
             userService.signUpUser(user);
             logger.info("User signed up successfully with email: {}", userSignUpDTO.getEmailId());
@@ -50,8 +43,8 @@ public class UserExecutor {
         if (user == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password");
         }
-        if(passwordEncoder.matches(userLoginDTO.getPassword(), user.getPassword())) {
-            return ResponseEntity.ok("{\"token\": \"" + jwtUtil.generateToken(user.getEmailId(), String.valueOf(user.getRole())) + "\"}");
+        if(userLoginDTO.getPassword().equals(user.getPassword())) {
+            return ResponseEntity.ok("Successfully logged in");
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ShowWatchListResponseDTO("Invalid email or password"));
         }
