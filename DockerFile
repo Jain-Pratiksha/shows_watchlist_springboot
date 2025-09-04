@@ -1,0 +1,25 @@
+# Use OpenJDK 21 image - since using java 21, different images can also be used
+FROM openjdk:21-jdk-slim
+
+# First stage: clean and build the JAR file using Maven
+# RUN mvn clean package -DskipTests
+
+#Set working directory inside the container
+WORKDIR /usr/src/app
+
+# Copy the jar file from the host to the container
+COPY target/shows_watchlist-0.0.1-SNAPSHOT.jar /usr/src/app
+
+# Expose the port on which the application will run
+EXPOSE 8080
+
+# Set the command to run the application
+# This command will be executed when the container starts
+# java -jar shows_watchlist-0.0.1-SNAPSHOT.jar
+ENTRYPOINT ["java", "-jar", "shows_watchlist-0.0.1-SNAPSHOT.jar"]
+
+# Steps to build and run the Docker container:
+# Build image
+# docker build -t shows_watchlist_service_0.1 .
+# Run container, maps container port:local port
+# docker run -p 8080:8080 shows_watchlist_service_0.1
